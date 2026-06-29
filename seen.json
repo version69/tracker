@@ -1,4 +1,11 @@
 {
-  "issues": {},
-  "updated_at": null
+  "issues": {
+    "clickhouse/clickhouse#108717": {
+      "first_seen_at": "2026-06-29T18:37:26.251185+00:00",
+      "repo": "clickhouse/clickhouse",
+      "title": "ALTER USER ... SET as equivalent to ALTER USER ... MODIFY SETTING",
+      "url": "https://github.com/ClickHouse/ClickHouse/issues/108717"
+    }
+  },
+  "updated_at": "2026-06-29T18:37:26.251206+00:00"
 }
