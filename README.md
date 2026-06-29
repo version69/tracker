@@ -1,10 +1,10 @@
 # Good First Issue Tracker
 
-Free hourly email alerts for newly opened beginner-friendly GitHub issues.
+Free email alerts every 5 hours for newly opened beginner-friendly GitHub issues.
 
 ## How It Works
 
-GitHub Actions runs every hour, `scripts/track_issues.py` searches open GitHub issues, unseen matches are emailed with Resend, and `seen.json` is committed back to the repo so the same issue is not sent twice.
+GitHub Actions runs every 5 hours, `scripts/track_issues.py` searches open GitHub issues, unseen matches are emailed with Resend, and `seen.json` is committed back to the repo so the same issue is not sent twice.
 
 ## Free Setup
 
@@ -64,10 +64,10 @@ For the cleanest signal, add open-source projects you care about to `repos.json`
 
 ## Run Manually
 
-Open the workflow in GitHub Actions and choose **Run workflow**. The scheduled cron also runs hourly:
+Open the workflow in GitHub Actions and choose **Run workflow**. The scheduled cron also runs every 5 hours:
 
 ```yaml
-0 * * * *
+0 */5 * * *
 ```
 
 ## Local Test

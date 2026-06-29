@@ -132,15 +132,24 @@ def request_json(url: str, headers: dict[str, str], payload: dict[str, Any] | No
         headers = {**headers, "Content-Type": "application/json"}
 
     request = Request(url, data=data, headers=headers, method=method)
-    try:
-        with urlopen(request, timeout=30) as response:
-            body = response.read().decode("utf-8")
-            return json.loads(body) if body else {}
-    except HTTPError as error:
-        message = error.read().decode("utf-8", errors="replace")
-        raise RuntimeError(f"HTTP {error.code} from {url}: {message}") from error
-    except URLError as error:
-        raise RuntimeError(f"Network error calling {url}: {error}") from error
+    for attempt in range(3):
+        try:
+            with urlopen(request, timeout=30) as response:
+                body = response.read().decode("utf-8")
+                return json.loads(body) if body else {}
+        except HTTPError as error:
+            message = error.read().decode("utf-8", errors="replace")
+            is_rate_limit = error.code in {403, 429} and "rate limit" in message.lower()
+            if method == "GET" and is_rate_limit and attempt < 2:
+                wait_seconds = 90 * (attempt + 1)
+                print(f"GitHub rate limit response. Waiting {wait_seconds} seconds before retrying.")
+                time.sleep(wait_seconds)
+                continue
+            raise RuntimeError(f"HTTP {error.code} from {url}: {message}") from error
+        except URLError as error:
+            raise RuntimeError(f"Network error calling {url}: {error}") from error
+
+    raise RuntimeError(f"Failed to call {url}.")
 
 
 def github_headers() -> dict[str, str]:
@@ -158,7 +167,7 @@ def github_headers() -> dict[str, str]:
 def build_queries(labels: list[str], repos: list[str]) -> list[str]:
     base = "state:open type:issue no:assignee"
     if repos:
-        return [f'{base} label:"{label}" repo:{repo}' for label in labels for repo in repos]
+        return [f"{base} repo:{repo}" for repo in repos]
     return [f'{base} label:"{label}"' for label in labels]
 
 
@@ -170,7 +179,7 @@ def search_github(labels: list[str], repos: list[str]) -> list[dict[str, Any]]:
         params = urlencode({"q": query, "sort": "created", "order": "desc", "per_page": "50"})
         data = request_json(f"{GITHUB_SEARCH_URL}?{params}", headers)
         items.extend(data.get("items", []))
-        time.sleep(1.0)
+        time.sleep(3.0)
 
     return items
 
@@ -200,14 +209,25 @@ def normalize_issue(raw: dict[str, Any]) -> Issue | None:
     )
 
 
-def fresh_issues(raw_items: list[dict[str, Any]], seen: dict[str, Any]) -> list[Issue]:
+def has_matching_label(issue: Issue, wanted_labels: list[str]) -> bool:
+    wanted = {label.casefold() for label in wanted_labels}
+    actual = {label.casefold() for label in issue.labels}
+    return bool(wanted.intersection(actual))
+
+
+def fresh_issues(raw_items: list[dict[str, Any]], seen: dict[str, Any], labels: list[str]) -> list[Issue]:
     exclude_repos = set(env_list("EXCLUDE_REPOS"))
     seen_issues = seen["issues"]
     deduped: dict[str, Issue] = {}
 
     for raw in raw_items:
         issue = normalize_issue(raw)
-        if not issue or issue.repo in exclude_repos or issue.key in seen_issues:
+        if (
+            not issue
+            or issue.repo in exclude_repos
+            or issue.key in seen_issues
+            or not has_matching_label(issue, labels)
+        ):
             continue
         deduped[issue.key] = issue
 
@@ -351,7 +371,7 @@ def build_email_html(issues: list[Issue]) -> str:
         <table role="presentation">
           {cards}
         </table>
-        <p class="footer">Sent by your free GitHub Actions tracker. The workflow runs every hour and stores seen issue IDs in <code>seen.json</code>.</p>
+        <p class="footer">Sent by your free GitHub Actions tracker. The workflow runs every 5 hours and stores seen issue IDs in <code>seen.json</code>.</p>
       </div>
     </div>
   </body>
@@ -382,7 +402,7 @@ def main() -> int:
     repos = load_repos()
     seen = load_seen()
     raw_items = search_github(labels, repos)
-    issues = fresh_issues(raw_items, seen)
+    issues = fresh_issues(raw_items, seen, labels)
 
     if not issues:
         print("No new matching issues found.")
