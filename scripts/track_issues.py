@@ -20,7 +20,7 @@ from urllib.request import Request, urlopen
 GITHUB_API_URL = "https://api.github.com"
 RESEND_EMAIL_URL = "https://api.resend.com/emails"
 DEFAULT_EMAIL_FROM = "Good First Issues <onboarding@resend.dev>"
-DEFAULT_LOOKBACK_HOURS = 5
+DEFAULT_LOOKBACK_HOURS = 2
 DEFAULT_MAX_PAGES_PER_REPO = 5
 REPOS_PATH = Path("repos.json")
 SEEN_PATH = Path("seen.json")
@@ -433,12 +433,12 @@ def build_email_html(issues: list[Issue]) -> str:
         <div class="header">
           <p class="eyebrow">Open source opportunities</p>
           <h1>{count} new beginner-friendly {issue_word}</h1>
-          <p class="subtitle">Fresh open GitHub issues from the last 5 hours tagged good first issue, easy, beginner, or help wanted. Already-seen issues are skipped automatically.</p>
+          <p class="subtitle">Fresh open GitHub issues from the last 2 hours tagged good first issue, easy, beginner, or help wanted. Already-seen issues are skipped automatically.</p>
         </div>
         <table role="presentation">
           {cards}
         </table>
-        <p class="footer">Sent by your free GitHub Actions tracker. The workflow runs every 5 hours and stores seen issue IDs in <code>seen.json</code>.</p>
+        <p class="footer">Sent by your free GitHub Actions tracker. The workflow runs every 2 hours and stores seen issue IDs in <code>seen.json</code>.</p>
       </div>
     </div>
   </body>
