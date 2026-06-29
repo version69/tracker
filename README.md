@@ -4,7 +4,7 @@ Free email alerts every 5 hours for newly opened beginner-friendly GitHub issues
 
 ## How It Works
 
-GitHub Actions runs every 5 hours, `scripts/track_issues.py` searches open GitHub issues, unseen matches are emailed with Resend, and `seen.json` is committed back to the repo so the same issue is not sent twice.
+GitHub Actions runs every 5 hours, `scripts/track_issues.py` checks the repositories in `repos.json`, unseen matches are emailed with Resend, and `seen.json` is committed back to the repo so the same issue is not sent twice.
 
 ## Free Setup
 
@@ -47,7 +47,7 @@ Edit `repos.json` and add GitHub repository links:
 
 Only GitHub repository links are accepted.
 
-If `repos.json` has at least one repository, the script tracks only those repositories. If it is empty, the script falls back to the optional `TRACK_REPOS` GitHub Actions variable.
+`repos.json` must contain at least one repository link.
 
 ## Optional Filters
 
@@ -56,11 +56,10 @@ Add repository variables under `Settings -> Secrets and variables -> Actions -> 
 | Variable | Example | Default |
 | --- | --- | --- |
 | `SEARCH_LABELS` | `good first issue,easy,easy task,beginner` | Common beginner labels. |
-| `TRACK_REPOS` | `facebook/react,vercel/next.js` | Fallback only when `repos.json` is empty. |
 | `EXCLUDE_REPOS` | `owner/noisy-repo` | Empty. |
 | `MAX_ISSUES_PER_EMAIL` | `25` | `25`. |
 
-For the cleanest signal, add open-source projects you care about to `repos.json`. Leaving both `repos.json` and `TRACK_REPOS` empty works, but large public GitHub searches can be noisy.
+For the cleanest signal, add open-source projects you care about to `repos.json`.
 
 ## Run Manually
 

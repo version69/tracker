@@ -17,7 +17,7 @@ from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 
-GITHUB_SEARCH_URL = "https://api.github.com/search/issues"
+GITHUB_API_URL = "https://api.github.com"
 RESEND_EMAIL_URL = "https://api.resend.com/emails"
 DEFAULT_EMAIL_FROM = "Good First Issues <onboarding@resend.dev>"
 REPOS_PATH = Path("repos.json")
@@ -95,10 +95,7 @@ def load_repos() -> list[str]:
                 repos.append(repo)
                 seen.add(repo)
 
-    if repos:
-        return repos
-
-    return env_list("TRACK_REPOS")
+    return repos
 
 
 def load_seen() -> dict[str, Any]:
@@ -164,21 +161,27 @@ def github_headers() -> dict[str, str]:
     return headers
 
 
-def build_queries(labels: list[str], repos: list[str]) -> list[str]:
-    base = "state:open type:issue no:assignee"
-    if repos:
-        return [f"{base} repo:{repo}" for repo in repos]
-    return [f'{base} label:"{label}"' for label in labels]
-
-
 def search_github(labels: list[str], repos: list[str]) -> list[dict[str, Any]]:
     headers = github_headers()
     items: list[dict[str, Any]] = []
 
-    for query in build_queries(labels, repos):
-        params = urlencode({"q": query, "sort": "created", "order": "desc", "per_page": "50"})
-        data = request_json(f"{GITHUB_SEARCH_URL}?{params}", headers)
-        items.extend(data.get("items", []))
+    if not repos:
+        raise RuntimeError("Add at least one GitHub repository link to repos.json.")
+
+    for repo in repos:
+        params = urlencode(
+            {
+                "state": "open",
+                "assignee": "none",
+                "sort": "created",
+                "direction": "desc",
+                "per_page": "100",
+            }
+        )
+        data = request_json(f"{GITHUB_API_URL}/repos/{repo}/issues?{params}", headers)
+        for item in data:
+            item["_tracked_repo"] = repo
+            items.append(item)
         time.sleep(3.0)
 
     return items
@@ -191,7 +194,7 @@ def normalize_issue(raw: dict[str, Any]) -> Issue | None:
 
     repo_url = raw.get("repository_url", "")
     repo = repo_url.rsplit("/", 2)[-2:]
-    repo_name = "/".join(repo) if len(repo) == 2 else "unknown/repository"
+    repo_name = raw.get("_tracked_repo") or ("/".join(repo) if len(repo) == 2 else "unknown/repository")
     number = int(raw.get("number", 0))
     key = f"{repo_name}#{number}"
     user = raw.get("user") or {}

@@ -34,7 +34,6 @@ jobs:
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
           EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
           SEARCH_LABELS: ${{ vars.SEARCH_LABELS }}
-          TRACK_REPOS: ${{ vars.TRACK_REPOS }}
           EXCLUDE_REPOS: ${{ vars.EXCLUDE_REPOS }}
           MAX_ISSUES_PER_EMAIL: ${{ vars.MAX_ISSUES_PER_EMAIL }}
         run: python scripts/track_issues.py
