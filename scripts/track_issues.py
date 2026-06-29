@@ -20,7 +20,7 @@ from urllib.request import Request, urlopen
 GITHUB_API_URL = "https://api.github.com"
 RESEND_EMAIL_URL = "https://api.resend.com/emails"
 DEFAULT_EMAIL_FROM = "Good First Issues <onboarding@resend.dev>"
-DEFAULT_LOOKBACK_HOURS = 5
+DEFAULT_LOOKBACK_DAYS = 5
 REPOS_PATH = Path("repos.json")
 SEEN_PATH = Path("seen.json")
 DEFAULT_LABELS = [
@@ -233,17 +233,17 @@ def parse_github_datetime(value: str) -> datetime | None:
         return None
 
 
-def lookback_hours() -> int:
-    raw = os.getenv("LOOKBACK_HOURS", "").strip()
+def lookback_days() -> int:
+    raw = os.getenv("LOOKBACK_DAYS", "").strip()
     if not raw:
-        return DEFAULT_LOOKBACK_HOURS
+        return DEFAULT_LOOKBACK_DAYS
     try:
-        hours = int(raw)
+        days = int(raw)
     except ValueError as error:
-        raise RuntimeError("LOOKBACK_HOURS must be a whole number.") from error
-    if hours <= 0:
-        raise RuntimeError("LOOKBACK_HOURS must be greater than 0.")
-    return hours
+        raise RuntimeError("LOOKBACK_DAYS must be a whole number.") from error
+    if days <= 0:
+        raise RuntimeError("LOOKBACK_DAYS must be greater than 0.")
+    return days
 
 
 def opened_within_lookback(issue: Issue, cutoff: datetime) -> bool:
@@ -255,7 +255,7 @@ def fresh_issues(raw_items: list[dict[str, Any]], seen: dict[str, Any], labels: 
     exclude_repos = set(env_list("EXCLUDE_REPOS"))
     seen_issues = seen["issues"]
     deduped: dict[str, Issue] = {}
-    cutoff = datetime.now(timezone.utc) - timedelta(hours=lookback_hours())
+    cutoff = datetime.now(timezone.utc) - timedelta(days=lookback_days())
 
     for raw in raw_items:
         issue = normalize_issue(raw)
@@ -404,7 +404,7 @@ def build_email_html(issues: list[Issue]) -> str:
         <div class="header">
           <p class="eyebrow">Open source opportunities</p>
           <h1>{count} new beginner-friendly {issue_word}</h1>
-          <p class="subtitle">Fresh open GitHub issues from the last 5 hours tagged good first issue, easy, beginner, or help wanted. Already-seen issues are skipped automatically.</p>
+          <p class="subtitle">Fresh open GitHub issues from the last 5 days tagged good first issue, easy, beginner, or help wanted. Already-seen issues are skipped automatically.</p>
         </div>
         <table role="presentation">
           {cards}
