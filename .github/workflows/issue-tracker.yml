@@ -37,7 +37,7 @@ jobs:
           EXCLUDE_REPOS: ${{ vars.EXCLUDE_REPOS }}
           MAX_ISSUES_PER_EMAIL: ${{ vars.MAX_ISSUES_PER_EMAIL }}
           MAX_PAGES_PER_REPO: ${{ vars.MAX_PAGES_PER_REPO }}
-          LOOKBACK_DAYS: ${{ vars.LOOKBACK_DAYS }}
+          LOOKBACK_HOURS: ${{ vars.LOOKBACK_HOURS }}
         run: python scripts/track_issues.py
 
       - name: Commit seen issues

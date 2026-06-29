@@ -1,3 +1,5 @@
 [
-  "https://github.com/clickhouse/clickhouse"
+  "https://github.com/clickhouse/clickhouse",
+  "https://github.com/apache/beam",
+  "https://github.com/lance-format/lance"
 ]
