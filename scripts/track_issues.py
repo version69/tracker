@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Hourly GitHub issue watcher with Resend email notifications."""
+"""GitHub issue watcher with Resend email notifications."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ import os
 import sys
 import time
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
@@ -20,6 +20,7 @@ from urllib.request import Request, urlopen
 GITHUB_API_URL = "https://api.github.com"
 RESEND_EMAIL_URL = "https://api.resend.com/emails"
 DEFAULT_EMAIL_FROM = "Good First Issues <onboarding@resend.dev>"
+DEFAULT_LOOKBACK_HOURS = 5
 REPOS_PATH = Path("repos.json")
 SEEN_PATH = Path("seen.json")
 DEFAULT_LABELS = [
@@ -123,6 +124,11 @@ def save_seen(seen: dict[str, Any]) -> None:
 def request_json(url: str, headers: dict[str, str], payload: dict[str, Any] | None = None) -> Any:
     data = None
     method = "GET"
+    headers = {
+        "Accept": "application/json",
+        "User-Agent": "good-first-issue-tracker/1.0",
+        **headers,
+    }
     if payload is not None:
         data = json.dumps(payload).encode("utf-8")
         method = "POST"
@@ -218,10 +224,38 @@ def has_matching_label(issue: Issue, wanted_labels: list[str]) -> bool:
     return bool(wanted.intersection(actual))
 
 
+def parse_github_datetime(value: str) -> datetime | None:
+    if not value:
+        return None
+    try:
+        return datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError:
+        return None
+
+
+def lookback_hours() -> int:
+    raw = os.getenv("LOOKBACK_HOURS", "").strip()
+    if not raw:
+        return DEFAULT_LOOKBACK_HOURS
+    try:
+        hours = int(raw)
+    except ValueError as error:
+        raise RuntimeError("LOOKBACK_HOURS must be a whole number.") from error
+    if hours <= 0:
+        raise RuntimeError("LOOKBACK_HOURS must be greater than 0.")
+    return hours
+
+
+def opened_within_lookback(issue: Issue, cutoff: datetime) -> bool:
+    created_at = parse_github_datetime(issue.created_at)
+    return bool(created_at and created_at >= cutoff)
+
+
 def fresh_issues(raw_items: list[dict[str, Any]], seen: dict[str, Any], labels: list[str]) -> list[Issue]:
     exclude_repos = set(env_list("EXCLUDE_REPOS"))
     seen_issues = seen["issues"]
     deduped: dict[str, Issue] = {}
+    cutoff = datetime.now(timezone.utc) - timedelta(hours=lookback_hours())
 
     for raw in raw_items:
         issue = normalize_issue(raw)
@@ -229,6 +263,7 @@ def fresh_issues(raw_items: list[dict[str, Any]], seen: dict[str, Any], labels: 
             not issue
             or issue.repo in exclude_repos
             or issue.key in seen_issues
+            or not opened_within_lookback(issue, cutoff)
             or not has_matching_label(issue, labels)
         ):
             continue
@@ -369,7 +404,7 @@ def build_email_html(issues: list[Issue]) -> str:
         <div class="header">
           <p class="eyebrow">Open source opportunities</p>
           <h1>{count} new beginner-friendly {issue_word}</h1>
-          <p class="subtitle">Fresh open GitHub issues tagged good first issue, easy, beginner, or help wanted. Already-seen issues are skipped automatically.</p>
+          <p class="subtitle">Fresh open GitHub issues from the last 5 hours tagged good first issue, easy, beginner, or help wanted. Already-seen issues are skipped automatically.</p>
         </div>
         <table role="presentation">
           {cards}
@@ -396,7 +431,10 @@ def send_email(issues: list[Issue]) -> None:
         "subject": subject,
         "html": build_email_html(issues),
     }
-    headers = {"Authorization": f"Bearer {api_key}"}
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Accept": "application/json",
+    }
     request_json(RESEND_EMAIL_URL, headers, payload)
 
 

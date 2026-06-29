@@ -4,7 +4,7 @@ Free email alerts every 5 hours for newly opened beginner-friendly GitHub issues
 
 ## How It Works
 
-GitHub Actions runs every 5 hours, `scripts/track_issues.py` checks the repositories in `repos.json`, unseen matches are emailed with Resend, and `seen.json` is committed back to the repo so the same issue is not sent twice.
+GitHub Actions runs every 5 hours, `scripts/track_issues.py` checks the repositories in `repos.json`, unseen matches opened in the last 5 hours are emailed with Resend, and `seen.json` is committed back to the repo so the same issue is not sent twice.
 
 ## Free Setup
 
@@ -33,6 +33,8 @@ If you verify your own domain in Resend, you can optionally add this repository 
 | --- | --- | --- |
 | `EMAIL_FROM` | `Issues <alerts@yourdomain.com>` | Optional custom sender. Must be allowed by Resend. |
 
+If Resend returns a sender or domain verification error, verify a domain in Resend and set `EMAIL_FROM` to an address on that domain.
+
 ## Repositories To Track
 
 Edit `repos.json` and add GitHub repository links:
@@ -58,6 +60,7 @@ Add repository variables under `Settings -> Secrets and variables -> Actions -> 
 | `SEARCH_LABELS` | `good first issue,easy,easy task,beginner` | Common beginner labels. |
 | `EXCLUDE_REPOS` | `owner/noisy-repo` | Empty. |
 | `MAX_ISSUES_PER_EMAIL` | `25` | `25`. |
+| `LOOKBACK_HOURS` | `5` | `5`. |
 
 For the cleanest signal, add open-source projects you care about to `repos.json`.
 
