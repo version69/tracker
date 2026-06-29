@@ -21,6 +21,7 @@ GITHUB_API_URL = "https://api.github.com"
 RESEND_EMAIL_URL = "https://api.resend.com/emails"
 DEFAULT_EMAIL_FROM = "Good First Issues <onboarding@resend.dev>"
 DEFAULT_LOOKBACK_DAYS = 5
+DEFAULT_MAX_PAGES_PER_REPO = 5
 REPOS_PATH = Path("repos.json")
 SEEN_PATH = Path("seen.json")
 DEFAULT_LABELS = [
@@ -167,7 +168,20 @@ def github_headers() -> dict[str, str]:
     return headers
 
 
-def search_github(labels: list[str], repos: list[str]) -> list[dict[str, Any]]:
+def max_pages_per_repo() -> int:
+    raw = os.getenv("MAX_PAGES_PER_REPO", "").strip()
+    if not raw:
+        return DEFAULT_MAX_PAGES_PER_REPO
+    try:
+        pages = int(raw)
+    except ValueError as error:
+        raise RuntimeError("MAX_PAGES_PER_REPO must be a whole number.") from error
+    if pages <= 0:
+        raise RuntimeError("MAX_PAGES_PER_REPO must be greater than 0.")
+    return pages
+
+
+def search_github(labels: list[str], repos: list[str], cutoff: datetime) -> list[dict[str, Any]]:
     headers = github_headers()
     items: list[dict[str, Any]] = []
 
@@ -175,20 +189,31 @@ def search_github(labels: list[str], repos: list[str]) -> list[dict[str, Any]]:
         raise RuntimeError("Add at least one GitHub repository link to repos.json.")
 
     for repo in repos:
-        params = urlencode(
-            {
-                "state": "open",
-                "assignee": "none",
-                "sort": "created",
-                "direction": "desc",
-                "per_page": "100",
-            }
-        )
-        data = request_json(f"{GITHUB_API_URL}/repos/{repo}/issues?{params}", headers)
-        for item in data:
-            item["_tracked_repo"] = repo
-            items.append(item)
-        time.sleep(3.0)
+        for page in range(1, max_pages_per_repo() + 1):
+            params = urlencode(
+                {
+                    "state": "open",
+                    "sort": "created",
+                    "direction": "desc",
+                    "per_page": "100",
+                    "page": str(page),
+                }
+            )
+            data = request_json(f"{GITHUB_API_URL}/repos/{repo}/issues?{params}", headers)
+            if not data:
+                break
+
+            oldest_created_at: datetime | None = None
+            for item in data:
+                item["_tracked_repo"] = repo
+                items.append(item)
+                created_at = parse_github_datetime(item.get("created_at", ""))
+                if created_at and (oldest_created_at is None or created_at < oldest_created_at):
+                    oldest_created_at = created_at
+
+            if oldest_created_at and oldest_created_at < cutoff:
+                break
+            time.sleep(3.0)
 
     return items
 
@@ -251,11 +276,15 @@ def opened_within_lookback(issue: Issue, cutoff: datetime) -> bool:
     return bool(created_at and created_at >= cutoff)
 
 
-def fresh_issues(raw_items: list[dict[str, Any]], seen: dict[str, Any], labels: list[str]) -> list[Issue]:
+def fresh_issues(
+    raw_items: list[dict[str, Any]],
+    seen: dict[str, Any],
+    labels: list[str],
+    cutoff: datetime,
+) -> list[Issue]:
     exclude_repos = set(env_list("EXCLUDE_REPOS"))
     seen_issues = seen["issues"]
     deduped: dict[str, Issue] = {}
-    cutoff = datetime.now(timezone.utc) - timedelta(days=lookback_days())
 
     for raw in raw_items:
         issue = normalize_issue(raw)
@@ -442,8 +471,9 @@ def main() -> int:
     labels = env_list("SEARCH_LABELS", DEFAULT_LABELS)
     repos = load_repos()
     seen = load_seen()
-    raw_items = search_github(labels, repos)
-    issues = fresh_issues(raw_items, seen, labels)
+    cutoff = datetime.now(timezone.utc) - timedelta(days=lookback_days())
+    raw_items = search_github(labels, repos, cutoff)
+    issues = fresh_issues(raw_items, seen, labels, cutoff)
 
     if not issues:
         print("No new matching issues found.")

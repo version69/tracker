@@ -36,6 +36,7 @@ jobs:
           SEARCH_LABELS: ${{ vars.SEARCH_LABELS }}
           EXCLUDE_REPOS: ${{ vars.EXCLUDE_REPOS }}
           MAX_ISSUES_PER_EMAIL: ${{ vars.MAX_ISSUES_PER_EMAIL }}
+          MAX_PAGES_PER_REPO: ${{ vars.MAX_PAGES_PER_REPO }}
           LOOKBACK_DAYS: ${{ vars.LOOKBACK_DAYS }}
         run: python scripts/track_issues.py
 

@@ -60,6 +60,7 @@ Add repository variables under `Settings -> Secrets and variables -> Actions -> 
 | `SEARCH_LABELS` | `good first issue,easy,easy task,beginner` | Common beginner labels. |
 | `EXCLUDE_REPOS` | `owner/noisy-repo` | Empty. |
 | `MAX_ISSUES_PER_EMAIL` | `25` | `25`. |
+| `MAX_PAGES_PER_REPO` | `5` | `5`. |
 | `LOOKBACK_DAYS` | `5` | `5`. |
 
 For the cleanest signal, add open-source projects you care about to `repos.json`.
