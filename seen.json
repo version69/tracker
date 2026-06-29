@@ -1,3 +1,17 @@
 {
-
+  "issues": {
+    "clickhouse/clickhouse#108717": {
+      "first_seen_at": "2026-06-29T18:47:47.964121+00:00",
+      "repo": "clickhouse/clickhouse",
+      "title": "ALTER USER ... SET as equivalent to ALTER USER ... MODIFY SETTING",
+      "url": "https://github.com/ClickHouse/ClickHouse/issues/108717"
+    },
+    "clickhouse/clickhouse#108759": {
+      "first_seen_at": "2026-06-29T18:47:47.964121+00:00",
+      "repo": "clickhouse/clickhouse",
+      "title": "Function `sqr`",
+      "url": "https://github.com/ClickHouse/ClickHouse/issues/108759"
+    }
+  },
+  "updated_at": "2026-06-29T18:47:47.964142+00:00"
 }
