@@ -70,7 +70,7 @@ For the cleanest signal, add open-source projects you care about to `repos.json`
 Open the workflow in GitHub Actions and choose **Run workflow**. The scheduled cron also runs every 2 hours:
 
 ```yaml
-0 */2 * * *
+17 */2 * * *
 ```
 
 ## Local Test
