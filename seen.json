@@ -11,7 +11,13 @@
       "repo": "clickhouse/clickhouse",
       "title": "Function `sqr`",
       "url": "https://github.com/ClickHouse/ClickHouse/issues/108759"
+    },
+    "clickhouse/clickhouse#109373": {
+      "first_seen_at": "2026-07-03T23:17:43.592114+00:00",
+      "repo": "clickhouse/clickhouse",
+      "title": "Information about parts where column is materialized in system.columns",
+      "url": "https://github.com/ClickHouse/ClickHouse/issues/109373"
     }
   },
-  "updated_at": "2026-06-29T18:47:47.964142+00:00"
+  "updated_at": "2026-07-03T23:17:43.592131+00:00"
 }
