@@ -144,13 +144,19 @@ def request_json(url: str, headers: dict[str, str], payload: dict[str, Any] | No
         except HTTPError as error:
             message = error.read().decode("utf-8", errors="replace")
             is_rate_limit = error.code in {403, 429} and "rate limit" in message.lower()
-            if method == "GET" and is_rate_limit and attempt < 2:
-                wait_seconds = 90 * (attempt + 1)
-                print(f"GitHub rate limit response. Waiting {wait_seconds} seconds before retrying.")
+            is_server_error = error.code >= 500
+            if method == "GET" and (is_rate_limit or is_server_error) and attempt < 2:
+                wait_seconds = 90 * (attempt + 1) if is_rate_limit else 15 * (attempt + 1)
+                print(f"Transient HTTP {error.code} from {url}. Waiting {wait_seconds} seconds before retrying.")
                 time.sleep(wait_seconds)
                 continue
-            raise RuntimeError(f"HTTP {error.code} from {url}: {message}") from error
+            raise RuntimeError(f"HTTP {error.code} from {url}: {message[:500]}") from error
         except URLError as error:
+            if method == "GET" and attempt < 2:
+                wait_seconds = 15 * (attempt + 1)
+                print(f"Network error calling {url}: {error}. Waiting {wait_seconds} seconds before retrying.")
+                time.sleep(wait_seconds)
+                continue
             raise RuntimeError(f"Network error calling {url}: {error}") from error
 
     raise RuntimeError(f"Failed to call {url}.")
