@@ -17,7 +17,19 @@
       "repo": "clickhouse/clickhouse",
       "title": "Information about parts where column is materialized in system.columns",
       "url": "https://github.com/ClickHouse/ClickHouse/issues/109373"
+    },
+    "clickhouse/clickhouse#111692": {
+      "first_seen_at": "2026-07-23T23:09:56.588836+00:00",
+      "repo": "clickhouse/clickhouse",
+      "title": "SHOW USERS LIKE/NOT LIKE",
+      "url": "https://github.com/ClickHouse/ClickHouse/issues/111692"
+    },
+    "clickhouse/clickhouse#111696": {
+      "first_seen_at": "2026-07-23T23:09:56.588836+00:00",
+      "repo": "clickhouse/clickhouse",
+      "title": "Text index: Add a StringZilla-based tokenizer",
+      "url": "https://github.com/ClickHouse/ClickHouse/issues/111696"
     }
   },
-  "updated_at": "2026-07-03T23:17:43.592131+00:00"
+  "updated_at": "2026-07-23T23:09:56.588861+00:00"
 }
