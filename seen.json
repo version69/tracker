@@ -1,5 +1,11 @@
 {
   "issues": {
+    "apache/airflow#70371": {
+      "first_seen_at": "2026-07-24T10:27:28.483103+00:00",
+      "repo": "apache/airflow",
+      "title": "Hide the \"Run with latest version\" checkbox in the Clear dialog for non-versioned bundles",
+      "url": "https://github.com/apache/airflow/issues/70371"
+    },
     "clickhouse/clickhouse#108717": {
       "first_seen_at": "2026-06-29T18:47:47.964121+00:00",
       "repo": "clickhouse/clickhouse",
@@ -31,5 +37,5 @@
       "url": "https://github.com/ClickHouse/ClickHouse/issues/111696"
     }
   },
-  "updated_at": "2026-07-23T23:09:56.588861+00:00"
+  "updated_at": "2026-07-24T10:27:28.483118+00:00"
 }
