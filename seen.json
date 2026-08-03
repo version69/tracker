@@ -12,6 +12,12 @@
       "title": "Separate JWT Secret Env from Standard Airflow Environment Variables",
       "url": "https://github.com/apache/airflow/issues/70843"
     },
+    "apache/airflow#71007": {
+      "first_seen_at": "2026-08-03T18:03:12.832584+00:00",
+      "repo": "apache/airflow",
+      "title": "`runAndTaskActions.options.preventRunningTasks` shows when clearing Tasks rather than proper display text",
+      "url": "https://github.com/apache/airflow/issues/71007"
+    },
     "clickhouse/clickhouse#108717": {
       "first_seen_at": "2026-06-29T18:47:47.964121+00:00",
       "repo": "clickhouse/clickhouse",
@@ -43,5 +49,5 @@
       "url": "https://github.com/ClickHouse/ClickHouse/issues/111696"
     }
   },
-  "updated_at": "2026-07-31T17:50:46.119087+00:00"
+  "updated_at": "2026-08-03T18:03:12.832612+00:00"
 }
