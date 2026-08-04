@@ -47,7 +47,19 @@
       "repo": "clickhouse/clickhouse",
       "title": "Text index: Add a StringZilla-based tokenizer",
       "url": "https://github.com/ClickHouse/ClickHouse/issues/111696"
+    },
+    "lance-format/lance#8244": {
+      "first_seen_at": "2026-08-04T21:34:03.204170+00:00",
+      "repo": "lance-format/lance",
+      "title": "refactor: use LazyLock to initialize Field and Schema once",
+      "url": "https://github.com/lance-format/lance/issues/8244"
+    },
+    "lance-format/lance#8245": {
+      "first_seen_at": "2026-08-04T21:34:03.204170+00:00",
+      "repo": "lance-format/lance",
+      "title": "Support StringView type in FTS indices",
+      "url": "https://github.com/lance-format/lance/issues/8245"
     }
   },
-  "updated_at": "2026-08-03T18:03:12.832612+00:00"
+  "updated_at": "2026-08-04T21:34:03.204194+00:00"
 }
