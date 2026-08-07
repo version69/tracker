@@ -18,6 +18,12 @@
       "title": "`runAndTaskActions.options.preventRunningTasks` shows when clearing Tasks rather than proper display text",
       "url": "https://github.com/apache/airflow/issues/71007"
     },
+    "apache/beam#39684": {
+      "first_seen_at": "2026-08-07T22:54:05.522433+00:00",
+      "repo": "apache/beam",
+      "title": "[Task]: Go SDK portable logical type support",
+      "url": "https://github.com/apache/beam/issues/39684"
+    },
     "clickhouse/clickhouse#108717": {
       "first_seen_at": "2026-06-29T18:47:47.964121+00:00",
       "repo": "clickhouse/clickhouse",
@@ -61,5 +67,5 @@
       "url": "https://github.com/lance-format/lance/issues/8245"
     }
   },
-  "updated_at": "2026-08-04T21:34:03.204194+00:00"
+  "updated_at": "2026-08-07T22:54:05.522461+00:00"
 }
