@@ -54,6 +54,12 @@
       "title": "Text index: Add a StringZilla-based tokenizer",
       "url": "https://github.com/ClickHouse/ClickHouse/issues/111696"
     },
+    "clickhouse/clickhouse#114297": {
+      "first_seen_at": "2026-08-11T11:03:41.067214+00:00",
+      "repo": "clickhouse/clickhouse",
+      "title": "Function `gzipDistance`",
+      "url": "https://github.com/ClickHouse/ClickHouse/issues/114297"
+    },
     "lance-format/lance#8244": {
       "first_seen_at": "2026-08-04T21:34:03.204170+00:00",
       "repo": "lance-format/lance",
@@ -67,5 +73,5 @@
       "url": "https://github.com/lance-format/lance/issues/8245"
     }
   },
-  "updated_at": "2026-08-07T22:54:05.522461+00:00"
+  "updated_at": "2026-08-11T11:03:41.067244+00:00"
 }
