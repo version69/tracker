@@ -78,6 +78,12 @@
       "title": "Function `resetSerialID` to reset/remove a `generateSerialID` series",
       "url": "https://github.com/ClickHouse/ClickHouse/issues/114455"
     },
+    "clickhouse/clickhouse#118635": {
+      "first_seen_at": "2026-09-07T18:42:57.547095+00:00",
+      "repo": "clickhouse/clickhouse",
+      "title": "Pretty and Vertical formats should highlight JSON",
+      "url": "https://github.com/ClickHouse/ClickHouse/issues/118635"
+    },
     "lance-format/lance#8244": {
       "first_seen_at": "2026-08-04T21:34:03.204170+00:00",
       "repo": "lance-format/lance",
@@ -91,5 +97,5 @@
       "url": "https://github.com/lance-format/lance/issues/8245"
     }
   },
-  "updated_at": "2026-08-12T11:09:12.991867+00:00"
+  "updated_at": "2026-09-07T18:42:57.547117+00:00"
 }
