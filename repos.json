@@ -2,5 +2,18 @@
   "https://github.com/clickhouse/clickhouse",
   "https://github.com/apache/beam",
   "https://github.com/lance-format/lance", 
-  "https://github.com/apache/airflow"
+  "https://github.com/apache/airflow",
+  "https://github.com/vllm-project/vllm",
+  "https://github.com/sgl-project/sglang",
+  "https://github.com/ggml-org/llama.cpp",
+  "https://github.com/flashinfer-ai/flashinfer",
+  "https://github.com/ai-dynamo/dynamo",
+  "https://github.com/llm-d/llm-d",
+  "https://github.com/vllm-project/aibrix",
+  "https://github.com/NVIDIA/TensorRT-LLM",
+  "https://github.com/triton-inference-server/server",
+  "https://github.com/LMCache/LMCache",
+  "https://github.com/ai-dynamo/nixl",
+  "https://github.com/mlc-ai/mlc-llm",
+  "https://github.com/InternLM/lmdeploy"
 ]
