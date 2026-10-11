@@ -84,6 +84,12 @@
       "title": "Pretty and Vertical formats should highlight JSON",
       "url": "https://github.com/ClickHouse/ClickHouse/issues/118635"
     },
+    "clickhouse/clickhouse#125272": {
+      "first_seen_at": "2026-10-11T23:38:23.389356+00:00",
+      "repo": "clickhouse/clickhouse",
+      "title": "Add functions `decodeQuotedPrintable`, `encodeQuotedPrintable`",
+      "url": "https://github.com/ClickHouse/ClickHouse/issues/125272"
+    },
     "lance-format/lance#8244": {
       "first_seen_at": "2026-08-04T21:34:03.204170+00:00",
       "repo": "lance-format/lance",
@@ -97,5 +103,5 @@
       "url": "https://github.com/lance-format/lance/issues/8245"
     }
   },
-  "updated_at": "2026-09-07T18:42:57.547117+00:00"
+  "updated_at": "2026-10-11T23:38:23.389377+00:00"
 }
