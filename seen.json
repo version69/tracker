@@ -101,7 +101,13 @@
       "repo": "lance-format/lance",
       "title": "Support StringView type in FTS indices",
       "url": "https://github.com/lance-format/lance/issues/8245"
+    },
+    "vllm-project/aibrix#3109": {
+      "first_seen_at": "2026-10-15T21:19:59.396508+00:00",
+      "repo": "vllm-project/aibrix",
+      "title": "[Feature][ModelClaim] Lower Retry-After for a sleeping model from 10 s to 3 s; a wake takes 2.5\u20133.1 s",
+      "url": "https://github.com/vllm-project/aibrix/issues/3109"
     }
   },
-  "updated_at": "2026-10-11T23:38:23.389377+00:00"
+  "updated_at": "2026-10-15T21:19:59.396531+00:00"
 }
