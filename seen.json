@@ -1,5 +1,23 @@
 {
   "issues": {
+    "LMCache/LMCache#6378": {
+      "first_seen_at": "2026-11-06T06:36:14.022654+00:00",
+      "repo": "LMCache/LMCache",
+      "title": "[Buildkite][Client] Run SGLang with lmcache-client against a full-wheel server",
+      "url": "https://github.com/LMCache/LMCache/issues/6378"
+    },
+    "LMCache/LMCache#6379": {
+      "first_seen_at": "2026-11-06T06:36:14.022654+00:00",
+      "repo": "LMCache/LMCache",
+      "title": "[CI][Client] Run lmcache-client against a full-wheel server",
+      "url": "https://github.com/LMCache/LMCache/issues/6379"
+    },
+    "LMCache/LMCache#6380": {
+      "first_seen_at": "2026-11-06T06:36:14.022654+00:00",
+      "repo": "LMCache/LMCache",
+      "title": "[Buildkite][Client] Run vLLM cache-hit E2E with lmcache-client",
+      "url": "https://github.com/LMCache/LMCache/issues/6380"
+    },
     "apache/airflow#70371": {
       "first_seen_at": "2026-07-24T10:27:28.483103+00:00",
       "repo": "apache/airflow",
@@ -109,5 +127,5 @@
       "url": "https://github.com/vllm-project/aibrix/issues/3109"
     }
   },
-  "updated_at": "2026-10-15T21:19:59.396531+00:00"
+  "updated_at": "2026-11-06T06:36:14.022684+00:00"
 }
